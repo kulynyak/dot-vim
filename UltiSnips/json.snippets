@@ -1,0 +1,23 @@
+snippet zz "package (not) exists" b
+  {
+    "name": "#${10:N} from ${20:eth}${30:1} [${40:1.1.1}.x ∈ (1,255)] is ${50:not} routed to ${60:eth}${70:2} [${80:2.2.2}.x ∈ (1,255)]",
+    "value": "$50exists from DUTNAME ETH${90:$30} mac_dst MAC${100:$90} ipv4_dst ${110:$80}.${120:X} to DUTNAME ETH${150:$70} ipv4_dst $110.$120 mac_dst host_mac flowtype valid",
+    "unit_packet_test": ${500:true}
+  }${600:,}
+$0
+endsnippet
+snippet zx "package (not) exists" b
+  {
+    "name": "#${10:N} from ${20:eth}${30:1} [${40:1.1.1}.x ∈ (1,255)] is ${50:not} routed to ${60:eth}${70:2} [${80:2.2.2}.x ∈ (1,255)]",
+    "value": "$50exists from DUTNAME ETH${90:$30} mac_dst MAC${100:$90} ipv4_dst ${110:$80}.${120:X} ${130:ipv4_src} ${140:$40.$120} to DUTNAME ETH${150:$70} $130 $140 ipv4_dst $110.$120 mac_dst host_mac flowtype valid",
+    "unit_packet_test": ${500:true}
+  }${600:,}
+$0
+endsnippet
+snippet f "false" w
+false
+endsnippet
+
+snippet t "true" w
+true
+endsnippet

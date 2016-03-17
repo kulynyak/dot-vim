@@ -1,0 +1,17 @@
+.DS_Store
+.AppleDouble
+.LSOverride
+# Icon must end with two \r
+Icon
+
+
+# Thumbnails
+._*
+
+
+undo/
+autoload/
+plugged/
+session/
+swap/
+yankring_history_v2.txt
