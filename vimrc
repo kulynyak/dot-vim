@@ -474,3 +474,9 @@ augroup fast_quit
   au CmdwinEnter * nnoremap <buffer> q :q<cr>
   au BufReadPost fugitive://* nnoremap <buffer> q :q<cr>
 augroup END
+
+"------------------------------------------------------------------------------
+" Disable recording
+" -----------------------------------------------------------------------------
+map q <Nop>
+
