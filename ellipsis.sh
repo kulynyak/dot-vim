@@ -3,6 +3,7 @@
 pkg.link() {
     # Link vimrc
     fs.link_file vimrc
+    fs.link_file gvimrc
 
     # Link package into ~/.vim
     fs.link_file "$PKG_PATH"
@@ -33,6 +34,7 @@ pkg.pull() {
 pkg.unlink() {
     # Unlink
     rm $ELLIPSIS_HOME/.vimrc
+    rm $ELLIPSIS_HOME/.gvimrc
     rm $ELLIPSIS_HOME/.vim
 }
 

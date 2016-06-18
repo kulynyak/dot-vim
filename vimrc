@@ -1,5 +1,6 @@
 "===============================================================================
 " Boostrap Vim-Plug on new systems
+
 "===============================================================================
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -14,6 +15,7 @@ call plug#begin('~/.vim/plugged')
 "===============================================================================
 " https://github.com/tomtom/tcomment_vim
 Plug 'tomtom/tcomment_vim'
+" gcc - toggle comments for line
 "-------------------------------------------------------------------------------
 " https://github.com/osyo-manga/vim-over
 Plug 'osyo-manga/vim-over'
@@ -31,9 +33,13 @@ let g:yankring_paste_using_g = 0 "do not map gp and gP
 "-------------------------------------------------------------------------------
 " https://github.com/bling/vim-airline
 Plug 'vim-airline'
-let g:airline_theme = 'molokai'
+if has("gui_macvim")
+  let g:airline_theme = 'solarized'
+else
+  let g:airline_theme = 'molokai'
+endif
 let g:airline#extensions#syntastic#enabled = 1
-" let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#branch#enabled = 1
 " let g:airline#extensions#tabline#enabled = 1
 set laststatus=2
 if !exists('g:airline_symbols')
@@ -49,6 +55,7 @@ let g:airline_right_alt_sep = ''
 let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
+autocmd CmdwinLeave * :AirlineRefresh
 "-------------------------------------------------------------------------------
 " https://github.com/airblade/vim-gitgutter
 Plug 'airblade/vim-gitgutter'
@@ -85,6 +92,7 @@ let g:syntastic_style_error_symbol = '✗'
 let g:syntastic_style_warning_symbol = '⚠'
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_aggregate_errors = 1
+let g:syntastic_javascript_checkers = ['eslint']
 "-------------------------------------------------------------------------------
 " https://github.com/tomasr/molokai
 Plug 'tomasr/molokai'
@@ -100,10 +108,10 @@ let g:session_directory = "~/.vim/session"
 let g:session_autoload = "no"
 let g:session_autosave = "no"
 let g:session_command_aliases = 1
-nnoremap <leader>so :OpenSession
-nnoremap <leader>ss :SaveSession
-nnoremap <leader>sd :DeleteSession<CR>
-nnoremap <leader>sc :CloseSession<CR>
+nnoremap <leader>so :OpenSession        " /so
+nnoremap <leader>ss :SaveSession        " /ss
+nnoremap <leader>sd :DeleteSession<CR>  " /sd
+nnoremap <leader>sc :CloseSession<CR>   " /sc
 "-------------------------------------------------------------------------------
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
@@ -136,17 +144,27 @@ let g:ctrlsf_mapping = {
             \ "prev": "N",
             \ }
 
-xnoremap <leader>g :<c-u>CtrlSF <c-r>=<SID>visual_search('/')<cr><cr>
+xnoremap <leader>g :<c-u>CtrlSF <c-r>=<SID>/rch('/')<cr><cr>
 nnoremap <leader>g :CtrlSF
 silent! nnoremap <unique> <silent> <leader>G :CtrlSFOpen<cr>
+"-------------------------------------------------------------------------------
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+let g:jsx_ext_required = 0
+"-------------------------------------------------------------------------------
 "===============================================================================
 " Add plugins to &runtimepath
 call plug#end()
 "===============================================================================
 
 " Colorscheme
-colorscheme molokai
-set background=dark
+if has("gui_macvim")
+  set background=light
+  colorscheme solarized
+else
+  colorscheme molokai
+  set background=dark
+endif
 " colorscheme solarized
 
 " Directories for swp files
@@ -188,10 +206,10 @@ set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
 " Clipboard integration
 set clipboard+=unnamedplus
 
-" Use ,d (or ,dd or ,dj or 20,dd) to delete a line without adding it to the
 " yanked stack (also, in visual mode)
-nnoremap <silent> <leader>d "_d
-vnoremap <silent> <leader>d "_d
+" Use ,d (or ,dd or ,dj r 20,dd) to delete a line without adding it to the
+nnoremap <silent> <leader>d " _d
+vnoremap <silent> <leader>d " _d
 
 " Set leader key to <comma>
 let mapleader=","
@@ -277,7 +295,7 @@ set mouse=a
 set cmdheight=2
 
 " Display line numbers on the left
-" set number
+set number
 
 " Use <F10> to toggle between 'paste' and 'nopaste'
 set pastetoggle=<F10>
@@ -287,9 +305,9 @@ set autoread
 
 " Indentation settings for using 4 spaces instead of tabs.
 " Do not change 'tabstop' from its default value of 8 with this setup.
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
 set expandtab
 
 " Indentation settings for using hard tabs for indent. Display tabs as
@@ -321,10 +339,10 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
 " Adjust viewports to the same size
-" map <leader>= <C-w>=
+map <leader>= <C-w>=
 
 " Stop search highlighting
-nnoremap <silent> <leader>/ :nohlsearch<cr>
+nnoremap <silent> <leader>/ :nohlsearch<cr> " ,/
 
 " Keep the cursor in place while joining lines
 nnoremap J mzJ`z
@@ -359,6 +377,7 @@ nnoremap Q gqap
 
 " Select entire buffer
 nnoremap vaa ggvGg_
+
 
 " Sudo to write
 cnoremap w!! w !sudo tee % >/dev/null
@@ -408,7 +427,7 @@ endfunction
 :vmap <leader>z :<C-U>%s/\<<c-r>*\>/
 
 " Open a quickfix window for the last search.
-nnoremap <silent> <LEADER>? :execute 'vimgrep /'.@/.'/g %'<cr>:copen<cr>
+nnoremap <silent> <leader>? :execute 'vimgrep /'.@/.'/g %'<cr>:copen<cr>
 
 " txt
 augroup vimrc-wrapping
@@ -459,6 +478,12 @@ call s:map_change_option('t', 'textwidth',
 call s:map_change_option('s', 'shiftwidth',
     \ 'let &shiftwidth = input("shiftwidth (". &shiftwidth ."): ")<bar>redraw')
 
+" Insert/append single char in 'normal' mode
+" s insert
+:nnoremap s :exec "normal i".nr2char(getchar())."\e"<CR>
+" S append
+:nnoremap S :exec "normal a".nr2char(getchar())."\e"<CR>
+
 "-------------------------------------------------------------------------------
 " TWEAKS:
 " EscNNiCEsc : inserts NN times char C
@@ -466,7 +491,7 @@ call s:map_change_option('s', 'shiftwidth',
 
 augroup fast_quit
   au!
-  " au FileType fzf-multisnippet nnoremap <buffer> q :q<cr>
+  au FileType fzf-multisnippet nnoremap <buffer> q :q<cr>
   au FileType help nnoremap <buffer> q :q<cr>
   au FileType qf nnoremap <buffer> q :q<cr>
   au FileType netrw nnoremap <buffer><nowait> q :bd!<cr>
@@ -480,3 +505,6 @@ augroup END
 " -----------------------------------------------------------------------------
 map q <Nop>
 
+if has("gui_macvim")
+  let macvim_hig_shift_movement = 1
+endif
